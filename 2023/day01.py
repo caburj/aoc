@@ -1,31 +1,29 @@
 import utils
 
-digits = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '0'}
-
 digit_words = {
   'one': '1', 'two': '2', 'three': '3', 'four': '4', 'five': '5',
   'six': '6', 'seven': '7', 'eight': '8', 'nine': '9', 'zero': '0'
 }
 
-def print_result(parse, lines):
-  print(utils.sum(map(parse, lines)))
+def make_int(digits: list[str]):
+  assert len(digits) > 0
+  return int(digits[0] + digits[-1])
 
 def parse_line1(line: str):
-  a, *bs = filter(lambda x: x in digits, line)
-  return int(''.join([a, a if len(bs) == 0 else bs[-1]]))
+  digits_found = [x for x in line if x in digit_words.values()]
+  return make_int(digits_found)
 
 def parse_line2(line: str):
-  index_digit_pairs = []
-  for word in digit_words:
-    for i, c in enumerate(line):
+  digits_found = []
+  for i, c in enumerate(line):
+    for word in digit_words:
       digit = digit_words[word]
       if c == digit or line[i:i+len(word)] == word:
-        index_digit_pairs.append((i, digit))
+        digits_found.append(digit)
 
-  a, *bs = (y for _, y in sorted(index_digit_pairs, key=lambda x: x[0]))
-  return int(''.join([a, a if len(bs) == 0 else bs[-1]]))
+  return make_int(digits_found)
 
-with open('./day01.txt') as f:
+with open('2023/day01.txt') as f:
   lines = f.readlines()
-  print_result(parse_line1, lines)
-  print_result(parse_line2, lines)
+  print('Part 1:', utils.sum(map(parse_line1, lines)))
+  print('Part 2:', utils.sum(map(parse_line2, lines)))
