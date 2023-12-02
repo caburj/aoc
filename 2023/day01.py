@@ -1,4 +1,4 @@
-from functools import reduce
+import utils
 
 digits = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '0'}
 
@@ -7,11 +7,8 @@ digit_words = {
   'six': '6', 'seven': '7', 'eight': '8', 'nine': '9', 'zero': '0'
 }
 
-def sum(lst):
-  return reduce(lambda x, y: x + y, lst)
-
 def print_result(parse, lines):
-  print(sum(map(parse, lines)))
+  print(utils.sum(map(parse, lines)))
 
 def parse_line1(line: str):
   a, *bs = filter(lambda x: x in digits, line)
