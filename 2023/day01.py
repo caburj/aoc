@@ -1,5 +1,3 @@
-import utils
-
 digit_words = {
   'one': '1', 'two': '2', 'three': '3', 'four': '4', 'five': '5',
   'six': '6', 'seven': '7', 'eight': '8', 'nine': '9', 'zero': '0'
@@ -25,5 +23,5 @@ def parse_line2(line: str):
 
 with open('2023/day01.txt') as f:
   lines = f.readlines()
-  print('Part 1:', utils.sum(map(parse_line1, lines)))
-  print('Part 2:', utils.sum(map(parse_line2, lines)))
+  print('Part 1:', sum(map(parse_line1, lines)))
+  print('Part 2:', sum(map(parse_line2, lines)))
