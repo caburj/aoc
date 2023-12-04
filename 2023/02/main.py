@@ -34,7 +34,7 @@ def cube_product(min_cubes):
     return min_cubes["red"] * min_cubes["green"] * min_cubes["blue"]
 
 
-with open("2023/day02.txt") as f:
+with open("2023/02/input.txt") as f:
     lines = f.readlines()
     games = list(map(parse_line, lines))
     max_cubes = {"red": 12, "green": 13, "blue": 14}

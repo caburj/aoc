@@ -90,7 +90,7 @@ def test():
 
 if __name__ == "__main__":
     test()
-    with open("2023/day03.txt") as f:
+    with open("2023/03/input.txt") as f:
         grid = f.read().strip().split("\n")
         print("Part 1:", sum(find_valid_numbers(grid)))
         print("Part 2:", sum((g1 * g2 for g1, g2 in get_gears(grid))))

@@ -18,7 +18,7 @@ def compute_score(line):
     return pow(2, count - 1)
 
 
-with open("2023/day04.txt") as f:
+with open("2023/04/input.txt") as f:
     lines = f.readlines()
     print("Part 1:", sum(compute_score(line) for line in lines))
 
