@@ -1,5 +1,5 @@
 import re
-from utils import get_input_str
+from utils import get_input
 
 space_re = re.compile(r"\s+")
 
@@ -19,7 +19,7 @@ def compute_score(line):
     return pow(2, count - 1)
 
 
-input_str = get_input_str(__file__)
+input_str = get_input(__file__)
 lines = input_str.splitlines()
 print("Part 1:", sum(compute_score(line) for line in lines))
 

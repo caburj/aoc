@@ -1,4 +1,4 @@
-from utils import get_input_str
+from utils import get_input
 
 
 def parse_line(line: str):
@@ -37,7 +37,7 @@ def cube_product(min_cubes):
     return min_cubes["red"] * min_cubes["green"] * min_cubes["blue"]
 
 
-input_str = get_input_str(__file__)
+input_str = get_input(__file__)
 lines = input_str.splitlines()
 games = list(map(parse_line, lines))
 max_cubes = {"red": 12, "green": 13, "blue": 14}

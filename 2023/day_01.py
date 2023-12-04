@@ -1,4 +1,4 @@
-from utils import get_input_str
+from utils import get_input
 
 
 digit_words = {
@@ -36,7 +36,7 @@ def parse_line2(line: str):
     return make_int(digits_found)
 
 
-input_str = get_input_str(__file__)
+input_str = get_input(__file__)
 lines = input_str.splitlines()
 print("Part 1:", sum(map(parse_line1, lines)))
 print("Part 2:", sum(map(parse_line2, lines)))
