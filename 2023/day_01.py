@@ -1,3 +1,6 @@
+from utils import get_input_str
+
+
 digit_words = {
     "one": "1",
     "two": "2",
@@ -33,7 +36,7 @@ def parse_line2(line: str):
     return make_int(digits_found)
 
 
-with open("2023/01/input.txt") as f:
-    lines = f.readlines()
-    print("Part 1:", sum(map(parse_line1, lines)))
-    print("Part 2:", sum(map(parse_line2, lines)))
+input_str = get_input_str(__file__)
+lines = input_str.splitlines()
+print("Part 1:", sum(map(parse_line1, lines)))
+print("Part 2:", sum(map(parse_line2, lines)))

@@ -1,3 +1,6 @@
+from utils import get_input_str
+
+
 def parse_line(line: str):
     game_name, game = line.split(":")
     cubes = []
@@ -34,13 +37,13 @@ def cube_product(min_cubes):
     return min_cubes["red"] * min_cubes["green"] * min_cubes["blue"]
 
 
-with open("2023/02/input.txt") as f:
-    lines = f.readlines()
-    games = list(map(parse_line, lines))
-    max_cubes = {"red": 12, "green": 13, "blue": 14}
-    possible_games = [
-        game_id for game_id, cubes in games if is_possible(max_cubes, cubes)
-    ]
-    print("Part 1:", sum(possible_games))
-    all_min_cubes = list(map(min_possible, map(lambda x: x[1], games)))
-    print("Part 2:", sum(map(cube_product, all_min_cubes)))
+input_str = get_input_str(__file__)
+lines = input_str.splitlines()
+games = list(map(parse_line, lines))
+max_cubes = {"red": 12, "green": 13, "blue": 14}
+possible_games = [
+    game_id for game_id, cubes in games if is_possible(max_cubes, cubes)
+]
+print("Part 1:", sum(possible_games))
+all_min_cubes = list(map(min_possible, map(lambda x: x[1], games)))
+print("Part 2:", sum(map(cube_product, all_min_cubes)))
