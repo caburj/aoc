@@ -71,9 +71,10 @@ def get_gears(grid):
 
 
 input_test_str = get_test_input(__file__).strip()
-test_grid = input_test_str.splitlines()
-assert sum(find_valid_numbers(test_grid)) == 4361
-assert sum((g1 * g2 for g1, g2 in get_gears(test_grid))) == 467835
+if (input_test_str):
+    test_grid = input_test_str.splitlines()
+    assert sum(find_valid_numbers(test_grid)) == 4361
+    assert sum((g1 * g2 for g1, g2 in get_gears(test_grid))) == 467835
 
 input_str = get_input(__file__).strip()
 grid = input_str.splitlines()

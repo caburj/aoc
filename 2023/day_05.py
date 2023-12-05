@@ -64,9 +64,11 @@ def part2(input):
             print("Searching", i, "...")
         i += 1
 
+test_input = get_test_input(__file__)
+if test_input:
+    assert part1(test_input) == 35
+    assert part2(test_input) == 46
 
-assert part1(get_test_input(__file__)) == 35
-print("Part 1:", part1(get_input(__file__)))
-
-assert part2(get_test_input(__file__)) == 46
-print("Part 2:", part2(get_input(__file__)))
+input = get_input(__file__)
+print("Part 1:", part1(input))
+print("Part 2:", part2(input))
