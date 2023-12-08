@@ -1,7 +1,8 @@
 import re
+import math
 from itertools import cycle
 from functools import reduce
-from utils import get_test_input, get_input, lcm
+from utils import get_test_input, get_input
 
 node_re = re.compile(r"(\w+) = \((\w+), (\w+)\)")
 
@@ -28,7 +29,7 @@ def parallel_trace(steps, nodes, start_suffix, end_suffix):
     starts = [key for key in nodes if key.endswith(start_suffix)]
     ends = {key for key in nodes if key.endswith(end_suffix)}
     is_end = lambda node: node in ends
-    return reduce(lcm, map(lambda start: trace(steps, nodes, start, is_end), starts))
+    return reduce(math.lcm, map(lambda s: trace(steps, nodes, s, is_end), starts))
 
 
 if __name__ == "__main__":
