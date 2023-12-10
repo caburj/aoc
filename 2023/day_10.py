@@ -4,10 +4,7 @@ from itertools import product
 # Pipe coordinates are (row_index, column_index).
 
 
-N = "|F7"
-E = "-7J"
-W = "-LF"
-S = "|LJ"
+N, E, W, S = "|F7", "-7J", "-LF", "|LJ"
 
 NS = set(product(N, S))
 WE = set(product(W, E))
