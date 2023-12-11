@@ -1,6 +1,6 @@
 import re
 from functools import reduce
-from utils import get_test_input, get_input
+from utils import get_test_input, get_input, run
 
 number_re = re.compile(r"\d+")
 
@@ -64,11 +64,17 @@ def part2(input):
             print("Searching", i, "...")
         i += 1
 
-test_input = get_test_input(__file__)
-if test_input:
+
+def test():
+    test_input = get_test_input(__file__)
     assert part1(test_input) == 35
     assert part2(test_input) == 46
 
-input = get_input(__file__)
-print("Part 1:", part1(input))
-print("Part 2:", part2(input))
+
+def main():
+    input = get_input(__file__)
+    print("Part 1:", part1(input))
+    print("Part 2:", part2(input))
+
+
+run(main, test)

@@ -1,5 +1,5 @@
 import re
-from utils import get_input, get_test_input
+from utils import get_input, get_test_input, run
 
 # Part 1:
 # collect numbers
@@ -70,13 +70,16 @@ def get_gears(grid):
             yield tuple(group)
 
 
-input_test_str = get_test_input(__file__).strip()
-if (input_test_str):
-    test_grid = input_test_str.splitlines()
+def test():
+    test_grid = get_test_input(__file__).strip().splitlines()
     assert sum(find_valid_numbers(test_grid)) == 4361
     assert sum((g1 * g2 for g1, g2 in get_gears(test_grid))) == 467835
 
-input_str = get_input(__file__).strip()
-grid = input_str.splitlines()
-print("Part 1:", sum(find_valid_numbers(grid)))
-print("Part 2:", sum((g1 * g2 for g1, g2 in get_gears(grid))))
+
+def main():
+    grid = get_input(__file__).strip().splitlines()
+    print("Part 1:", sum(find_valid_numbers(grid)))
+    print("Part 2:", sum((g1 * g2 for g1, g2 in get_gears(grid))))
+
+
+run(main, test)

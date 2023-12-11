@@ -2,7 +2,7 @@ import re
 import math
 from itertools import cycle
 from functools import reduce
-from utils import get_test_input, get_input
+from utils import get_test_input, get_input, run
 
 node_re = re.compile(r"(\w+) = \((\w+), (\w+)\)")
 
@@ -32,12 +32,20 @@ def parallel_trace(steps, nodes, start_suffix, end_suffix):
     return reduce(math.lcm, map(lambda s: trace(steps, nodes, s, is_end), starts))
 
 
-if __name__ == "__main__":
+basic_is_end = lambda node: node == "ZZZ"
+
+
+def test():
     test_steps, test_nodes = parse_input(get_test_input(__file__))
-    basic_is_end = lambda node: node == "ZZZ"
     assert trace(test_steps, test_nodes, "AAA", basic_is_end) == 6
-    steps, nodes = parse_input(get_input(__file__))
-    print("Part 1:", trace(steps, nodes, "AAA", basic_is_end))
     test_steps2, test_nodes2 = parse_input(get_test_input(__file__, "2"))
     assert parallel_trace(test_steps2, test_nodes2, "A", "Z") == 6
+
+
+def main():
+    steps, nodes = parse_input(get_input(__file__))
+    print("Part 1:", trace(steps, nodes, "AAA", basic_is_end))
     print("Part 2:", parallel_trace(steps, nodes, "A", "Z"))
+
+
+run(main, test)

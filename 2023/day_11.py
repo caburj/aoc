@@ -1,5 +1,5 @@
 from itertools import combinations
-from utils import get_test_input, get_input
+from utils import get_test_input, get_input, run
 
 
 def find_galaxies(grid, m):
@@ -21,11 +21,17 @@ def total_distance(galaxies):
     return sum(abs(r1 - r2) + abs(c1 - c2) for (r1, c1), (r2, c2) in pairs)
 
 
-if __name__ == "__main__":
+def test():
     test_grid = get_test_input(__file__).splitlines()
-    grid = get_input(__file__).splitlines()
     assert total_distance(find_galaxies(test_grid, 2)) == 374
-    print("Part 1:", total_distance(find_galaxies(grid, 2)))
     assert total_distance(find_galaxies(test_grid, 10)) == 1030
     assert total_distance(find_galaxies(test_grid, 100)) == 8410
+
+
+def main():
+    grid = get_input(__file__).splitlines()
+    print("Part 1:", total_distance(find_galaxies(grid, 2)))
     print("Part 2:", total_distance(find_galaxies(grid, 1_000_000)))
+
+
+run(main, test)

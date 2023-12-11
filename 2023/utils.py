@@ -19,11 +19,11 @@ def get_test_input(filename, suffix=""):
     return read_file(filename, input_name)
 
 
-def gcd(a, b):
-    while b != 0:
-        a, b = b, a % b
-    return a
+def run(main, test, ignore_other_exceptions=True):
+    try:
+        test()
+    except Exception as e:
+        if isinstance(e, AssertionError) or not ignore_other_exceptions:
+            raise e
 
-
-def lcm(a, b):
-    return a * b // gcd(a, b)
+    main()

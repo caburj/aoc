@@ -1,4 +1,4 @@
-from utils import get_test_input, get_input
+from utils import get_test_input, get_input, run
 from itertools import product
 
 # Pipe coordinates are (row_index, column_index).
@@ -157,25 +157,28 @@ def count_intersections(g, items, to_ignore, to_count):
     return n
 
 
-if __name__ == "__main__":
+def test():
     test_input = get_test_input(__file__)
     test_input_2 = get_test_input(__file__, "2")
-    input = get_input(__file__)
-
     g1, s1, *_ = parse_input(test_input)
     g2, s2, *_ = parse_input(test_input_2)
-    g, s, tl, br = parse_input(input)
     assert len(find_loop(g1, s1)) // 2 == 4
     assert len(find_loop(g2, s2)) // 2 == 8
-    print("Part 1:", len(find_loop(g, s)) // 2)
 
     test_input_3 = get_test_input(__file__, "3")
     test_input_4 = get_test_input(__file__, "4")
     test_input_5 = get_test_input(__file__, "5")
     test_input_6 = get_test_input(__file__, "6")
-
     assert num_enclosed(*parse_input(test_input_3)) == 4
     assert num_enclosed(*parse_input(test_input_4)) == 4
     assert num_enclosed(*parse_input(test_input_5)) == 8
     assert num_enclosed(*parse_input(test_input_6)) == 10
+
+
+def main():
+    g, s, tl, br = parse_input(get_input(__file__))
+    print("Part 1:", len(find_loop(g, s)) // 2)
     print("Part 2:", num_enclosed(g, s, tl, br))
+
+
+run(main, test)

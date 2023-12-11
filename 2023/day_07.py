@@ -1,5 +1,5 @@
 import re
-from utils import get_test_input, get_input
+from utils import get_test_input, get_input, run
 from itertools import groupby
 
 ranks = {c: i + 1 for i, c in enumerate("23456789TJQKA")}
@@ -98,21 +98,22 @@ def get_hands_score(hands, identifier, sorter):
     return count_score(rank_hands(hands, identifier, sorter))
 
 
-if __name__ == "__main__":
+normal_sorter = make_sorter(ranks)
+joker_sorter = make_sorter(joker_ranks)
+
+
+def test():
     test_hands = read_hands(get_test_input(__file__))
-    input_hands = read_hands(get_input(__file__))
-
-    normal_sorter = make_sorter(ranks)
-    joker_sorter = make_sorter(joker_ranks)
-
     assert get_hands_score(test_hands, identify_hand, normal_sorter) == 6440
-    print(
-        "Part 1:",
-        get_hands_score(input_hands, identify_hand, normal_sorter),
-    )
-
     assert get_hands_score(test_hands, identify_hand_with_joker, joker_sorter) == 5905
-    print(
-        "Part 2:",
-        get_hands_score(input_hands, identify_hand_with_joker, joker_sorter),
-    )
+
+
+def main():
+    input_hands = read_hands(get_input(__file__))
+    p1 = get_hands_score(input_hands, identify_hand, normal_sorter)
+    p2 = get_hands_score(input_hands, identify_hand_with_joker, joker_sorter)
+    print("Part 1:", p1)
+    print("Part 2:", p2)
+
+
+run(main, test)
