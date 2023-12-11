@@ -3,7 +3,7 @@ from utils import get_test_input, get_input, run
 
 
 def find_galaxies(grid, m):
-    # m = expansion factor
+    # m := expansion factor
     row_gaps = [i for i, row in enumerate(grid) if row.count("#") == 0]
     col_gaps = [j for j, col in enumerate(zip(*grid)) if col.count("#") == 0]
     for i in range(len(grid)):
@@ -11,9 +11,7 @@ def find_galaxies(grid, m):
             if grid[i][j] == "#":
                 n_row_gaps = len([g for g in row_gaps if g < i])
                 n_col_gaps = len([g for g in col_gaps if g < j])
-                expanded_i = n_row_gaps * m + (i - n_row_gaps)
-                expanded_j = n_col_gaps * m + (j - n_col_gaps)
-                yield (expanded_i, expanded_j)
+                yield (n_row_gaps * (m - 1) + i, n_col_gaps * (m - 1) + j)
 
 
 def total_distance(galaxies):
