@@ -1,14 +1,31 @@
 from utils import get_test_input, get_input, run
 
 
-def tilt_north(lines):
+def tilt_horizontal(lines, west=True):
+    for i in range(len(lines)):
+        line = lines[i]
+        box_ids = [i for i, x in enumerate(line) if x == "#"]
+        for s, e in zip(box_ids, box_ids[1:]):
+            n_O = len(list(filter(lambda x: x == "O", line[s + 1 : e])))
+            n_placed_O = 0
+            range_ = range(s + 1, e) if west else range(e - 1, s, -1)
+            for j in range_:
+                if n_placed_O < n_O:
+                    lines[i][j] = "O"
+                    n_placed_O += 1
+                else:
+                    lines[i][j] = "."
+
+
+def tilt_vertical(lines, north=True):
     for j in range(len(lines[0])):
         line = [l[j] for l in lines]
         box_ids = [i for i, x in enumerate(line) if x == "#"]
         for s, e in zip(box_ids, box_ids[1:]):
             n_O = len(list(filter(lambda x: x == "O", line[s + 1 : e])))
             n_placed_O = 0
-            for i in range(s + 1, e):
+            range_ = range(s + 1, e) if north else range(e - 1, s, -1)
+            for i in range_:
                 if n_placed_O < n_O:
                     lines[i][j] = "O"
                     n_placed_O += 1
@@ -17,52 +34,10 @@ def tilt_north(lines):
 
 
 def cycle(lines):
-    n_cols = len(lines[0])
-    n_rows = len(lines)
-
-    tilt_north(lines)
-
-    # tilt west
-    for i in range(n_rows):
-        line = lines[i]
-        box_ids = [i for i, x in enumerate(line) if x == "#"]
-        for s, e in zip(box_ids, box_ids[1:]):
-            n_O = len(list(filter(lambda x: x == "O", line[s + 1 : e])))
-            n_placed_O = 0
-            for j in range(s + 1, e):
-                if n_placed_O < n_O:
-                    lines[i][j] = "O"
-                    n_placed_O += 1
-                else:
-                    lines[i][j] = "."
-
-    # tilt south
-    for j in range(n_cols):
-        line = [l[j] for l in lines]
-        box_ids = [i for i, x in enumerate(line) if x == "#"]
-        for s, e in zip(box_ids, box_ids[1:]):
-            n_O = len(list(filter(lambda x: x == "O", line[s + 1 : e])))
-            n_placed_O = 0
-            for i in range(e - 1, s, -1):
-                if n_placed_O < n_O:
-                    lines[i][j] = "O"
-                    n_placed_O += 1
-                else:
-                    lines[i][j] = "."
-
-    # tilt east
-    for i in range(n_rows):
-        line = lines[i]
-        box_ids = [i for i, x in enumerate(line) if x == "#"]
-        for s, e in zip(box_ids, box_ids[1:]):
-            n_O = len(list(filter(lambda x: x == "O", line[s + 1 : e])))
-            n_placed_O = 0
-            for j in range(e - 1, s, -1):
-                if n_placed_O < n_O:
-                    lines[i][j] = "O"
-                    n_placed_O += 1
-                else:
-                    lines[i][j] = "."
+    tilt_vertical(lines, north=True)
+    tilt_horizontal(lines, west=True)
+    tilt_vertical(lines, north=False)
+    tilt_horizontal(lines, west=False)
 
 
 def get_north_load(lines):
@@ -83,13 +58,23 @@ def parse_input(input):
     return lines
 
 
-def draw(lines):
-    return "\n".join("".join(line) for line in lines)
+def declare_incompetence():
+    # I'm too lazy to find a way to do this programmatically.
+    print(
+        """
+    Manually find the repeating pattern above.
+        1. Find the start of the repeating pattern, call it S.
+        2. Find the end of the repeating pattern, call it E.
+        3. Frequency of the pattern is E - S + 1, as F.
+        4. To get the value at 1_000_000_000, calculate (1_000_000_000 - S) % F as I.
+        5. The value at 1_000_000_000 is the same as the value at S + I.
+    """
+    )
 
 
 def test():
     lines = parse_input(get_test_input(__file__).strip())
-    tilt_north(lines)
+    tilt_vertical(lines, north=True)
     assert get_north_load(lines) == 136
 
     lines = parse_input(get_test_input(__file__).strip())
@@ -97,37 +82,20 @@ def test():
         cycle(lines)
         print(f"{i + 1}:", get_north_load(lines))
 
-    print(
-        """
-        Manually check the repeating pattern above.
-        1. Find the start of the repeating pattern, call it S.
-        2. Find the end of the repeating pattern, call it E.
-        3. Frequency of the pattern is E - S + 1.
-        4. To get the value at 1_000_000_000, calculate (1_000_000_000 - S) % (E - S + 1) as I.
-        5. The value at 1_000_000_000 is the same as the value at S + I.
-    """
-    )
+    declare_incompetence()
 
 
 def main():
     lines = parse_input(get_input(__file__).strip())
+    tilt_vertical(lines, north=True)
     print("Part 1:", get_north_load(lines))
 
     lines = parse_input(get_input(__file__).strip())
-    for i in range(1, 1000):
+    for i in range(1, 300):
         cycle(lines)
         print(f"{i}:", get_north_load(lines))
 
-    print(
-        """
-        Manually check the repeating pattern above.
-        1. Find the start of the repeating pattern, call it S.
-        2. Find the end of the repeating pattern, call it E.
-        3. Frequency of the pattern is E - S + 1.
-        4. To get the value at 1_000_000_000, calculate (1_000_000_000 - S) % (E - S + 1) as I.
-        5. The value at 1_000_000_000 is the same as the value at S + I.
-    """
-    )
+    declare_incompetence()
 
 
 run(main, test)
