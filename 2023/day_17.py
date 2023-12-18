@@ -2,13 +2,11 @@ import sys
 import math
 from utils import get_test_input, get_input, run
 
-"""
-Possible directions (0 - up, 1 - right, 2 - down, 3 - left)
-  0
-3 + 1
-  2
-"""
-
+# Directions:
+#
+#   0
+# 3 + 1
+#   2
 DELTAS = [(-1, 0), (0, 1), (1, 0), (0, -1)]
 SYMBOLS = ["^", ">", "v", "<"]
 
