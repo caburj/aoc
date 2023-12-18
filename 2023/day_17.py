@@ -1,4 +1,3 @@
-import sys
 import math
 from utils import get_test_input, get_input, run
 
