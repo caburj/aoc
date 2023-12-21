@@ -1,3 +1,4 @@
+import math
 from utils import get_input, get_test_input, run
 
 
@@ -107,7 +108,7 @@ def process_pulse(modules, name, pulse, sender):
         return module
 
 
-def broadcast_pulse(modules, names):
+def broadcast_pulse(modules, names, interrupt_when_sent_low=False):
     modules_to_broadcast = []
     for name in names:
         module = modules[name]
@@ -135,6 +136,11 @@ def broadcast_pulse(modules, names):
 
         elif isinstance(module, Conjunction):
             is_all_high_pulse = all(module.inputs.values())
+
+            if interrupt_when_sent_low and module.name == interrupt_when_sent_low:
+                if not is_all_high_pulse:
+                    raise Exception("Found it!")
+
             for receiver in module.receivers:
                 module.pulses[not is_all_high_pulse] += 1
                 modules_to_broadcast.append(
@@ -157,6 +163,34 @@ def count_pulses(modules):
     return n_low_pulses * n_high_pulses
 
 
+def when_sent_low(modules, name):
+    try:
+        n = 0
+        while True:
+            n += 1
+            modules_to_broadcast = broadcast_pulse(modules, ["button"])
+            while modules_to_broadcast:
+                modules_to_broadcast = broadcast_pulse(
+                    modules,
+                    [m.name for m in modules_to_broadcast],
+                    interrupt_when_sent_low=name,
+                )
+    except Exception:
+        return n
+
+
+def when_rx_received_low(input):
+    modules = parse_input(input)
+    input_of_rx = next(m for m in modules if "rx" in [r.name for r in modules[m].receivers])
+    rx_input_modules = [m for m in modules if input_of_rx in [r.name for r in modules[m].receivers]]
+    when_low_pulses_sent = []
+    for name in rx_input_modules:
+        # we need to reset the modules
+        modules = parse_input(input)
+        when_low_pulses_sent.append(when_sent_low(modules, name))
+    return math.lcm(*when_low_pulses_sent)
+
+
 def test1(input, expected):
     modules = parse_input(input)
     assert count_pulses(modules) == expected
@@ -171,6 +205,7 @@ def main():
     input = get_input(__file__)
     modules = parse_input(input)
     print("Part 1:", count_pulses(modules))
+    print("Part 2:", when_rx_received_low(input))
 
 
 run(main, test, ignore_other_exceptions=False)
