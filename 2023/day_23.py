@@ -10,10 +10,43 @@ class Graph:
         self.start_node = (0, 1)
         self.end_node = len(self.grid) - 1, len(self.grid[0]) - 2
 
+        # DAG for the part 1
+        self.contruct_dag()
+
+        # normal graph for the part 2
         self.construct_graph()
 
     def construct_graph(self):
+        # this is going to be a normal graph since there is no more constraints at the intersections
         self.graph = {}
+        nodes = set([self.start_node, self.end_node])
+        for i in range(self.m):
+            for j in range(self.n):
+                if self.grid[i][j] != ".":
+                    continue
+
+                surrounding_slopes = 0
+                for ni, nj in self.get_neighbors((i, j)):
+                    if self.grid[ni][nj] in "<>^v":
+                        surrounding_slopes += 1
+
+                if surrounding_slopes == 4 or surrounding_slopes == 3:
+                    nodes.add((i, j))
+
+        for node in nodes:
+            if node == self.end_node:
+                continue
+
+            for next_node, dist in self.get_unconstrained_next_nodes(node, nodes):
+                self.graph.setdefault(node, []).append((next_node, dist))
+
+    def get_unconstrained_next_nodes(self, node, nodes):
+        for i, j in self.get_neighbors(node):
+            if self.grid[i][j] != "#":
+                yield self.follow(node, (i, j), nodes)
+
+    def contruct_dag(self):
+        self.dag = {}
 
         # nodes include the start and end nodes, and coordinates where at least one of the neighbors is one of "<>^v"
         nodes = set([self.start_node, self.end_node])
@@ -37,9 +70,9 @@ class Graph:
                 continue
 
             for next_node, dist in self.get_next_nodes(node, nodes):
-                self.graph.setdefault(node, []).append((next_node, dist))
+                self.dag.setdefault(node, []).append((next_node, dist))
 
-        self.graph[self.end_node] = []
+        self.dag[self.end_node] = []
 
     def cell(self, node):
         i, j = node
@@ -109,15 +142,15 @@ class Graph:
                 yield i, j
 
     def find_longest_path(self):
-        distances = {node: float("-inf") for node in self.graph}
+        distances = {node: float("-inf") for node in self.dag}
         distances[self.start_node] = 0
 
         for node in self.topological_sort():
-            for neighbor, weight in self.graph[node]:
+            for neighbor, weight in self.dag[node]:
                 if distances[neighbor] < distances[node] + weight:
                     distances[neighbor] = distances[node] + weight
 
-        return max(distances.values())
+        return distances[self.end_node]
 
     def topological_sort(self):
         visited = set()
@@ -125,28 +158,47 @@ class Graph:
 
         def dfs(node):
             visited.add(node)
-            for neighbor, _ in self.graph.get(node, []):
+            for neighbor, _ in self.dag.get(node, []):
                 if neighbor not in visited:
                     dfs(neighbor)
             stack.append(node)
 
-        for node in self.graph.keys():
+        for node in self.dag.keys():
             if node not in visited:
                 dfs(node)
 
         return stack[::-1]
+
+    def find_unconstrained_longest_path(self):
+        def dfs(node, end, visited, path_length, max_length):
+            if node == end:
+                max_length["value"] = max(max_length["value"], path_length)
+                return
+
+            visited.add(node)
+            for neighbor, weight in self.graph[node]:
+                if neighbor not in visited:
+                    dfs(neighbor, end, visited, path_length + weight, max_length)
+
+            visited.remove(node)
+
+        max_length = {"value": 0}
+        dfs(self.start_node, self.end_node, set(), 0, max_length)
+        return max_length["value"]
 
 
 def test():
     input = get_test_input(__file__)
     g = Graph(input)
     assert g.find_longest_path() == 94
+    assert g.find_unconstrained_longest_path() == 154
 
 
 def main():
     input = get_input(__file__)
     g = Graph(input)
     print("Part 1:", g.find_longest_path())
+    print("Part 2:", g.find_unconstrained_longest_path())
 
 
 run(main, test, ignore_other_exceptions=False)
