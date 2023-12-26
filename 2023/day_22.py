@@ -12,9 +12,9 @@ def parse_input(input):
         bricks.append((i + 1, tuple(map(parse_coord, line.split("~")))))
 
     def sort_key(brick):
-        id, (start, end) = brick
-        sx, sy, sz = start
-        ex, ey, ez = end
+        _, (start, end) = brick
+        *_, sz = start
+        *_, ez = end
         return (sz, ez)
 
     return sorted(bricks, key=sort_key)
@@ -75,8 +75,8 @@ def lay_bricks(bricks, m, n):
             grid[sx][sy] += brick_height
             cell_owner[sx][sy] = i
 
-    supporting = {i: set() for i, bricks in bricks}
-    for i, brick in bricks:
+    supporting = {i: set() for i, _ in bricks}
+    for i, _ in bricks:
         for j in supports[i]:
             supporting[j].add(i)
 
@@ -84,7 +84,7 @@ def lay_bricks(bricks, m, n):
 
 
 def count_useless_bricks(supports, supporting, bricks):
-    multi_supports = set()
+    redundant_supports = set()
     not_supporting = set()
     for i, _ in bricks:
         _supporting = supporting[i]
@@ -92,19 +92,45 @@ def count_useless_bricks(supports, supporting, bricks):
             not_supporting.add(i)
         else:
             if all(len(supports[j]) > 1 for j in _supporting):
-                multi_supports.add(i)
+                redundant_supports.add(i)
 
-    return len(multi_supports | not_supporting)
+    return len(redundant_supports | not_supporting)
+
+
+def find_affected_bricks(i, supports, supporting, destroyed):
+    affected = set()
+    for j in supporting[i]:
+        j_supports = supports[j]
+        remaining_supports = j_supports - destroyed
+        if not remaining_supports:
+            affected.add(j)
+            destroyed.add(j)
+
+    for j in supporting[i]:
+        if j in affected:
+            affected |= find_affected_bricks(j, supports, supporting, destroyed)
+
+    return affected
+
+
+def disintegrate(supports, supporting, bricks):
+    return sum(
+        len(find_affected_bricks(i, supports, supporting, {i})) for i, _ in bricks
+    )
 
 
 def test():
     input = get_test_input(__file__)
-    assert count_useless_bricks(*lay_bricks(parse_input(input), 3, 3)) == 5
+    floating_bricks = lay_bricks(parse_input(input), 10, 10)
+    assert count_useless_bricks(*floating_bricks) == 5
+    assert disintegrate(*floating_bricks) == 7
 
 
 def main():
     input = get_input(__file__)
-    print(count_useless_bricks(*lay_bricks(parse_input(input), 10, 10)))
+    floating_bricks = lay_bricks(parse_input(input), 10, 10)
+    print("Part 1:", count_useless_bricks(*floating_bricks))
+    print("Part 2:", disintegrate(*floating_bricks))
 
 
 run(main, test, ignore_other_exceptions=False)
