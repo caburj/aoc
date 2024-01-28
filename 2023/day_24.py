@@ -101,7 +101,7 @@ def find_magical_stone(hailstones):
 def test():
     input = get_test_input(__file__)
     lines = list(map(get_2d_line, *zip(*parse_input(input))))
-    assert count_intersections(lines, lambda x, y: x > 7 and y < 27) == 2
+    assert count_intersections(lines, lambda x, y: 7 <= x <= 27 and 7 <= y <= 27) == 2
     assert find_magical_stone(parse_input(input)) == 47
 
 
