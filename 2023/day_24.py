@@ -80,15 +80,15 @@ def count_intersections(lines, is_included):
 
 
 def find_magical_stone(hailstones):
-    x, y, z, dx, dy, dz = z3.Ints("x y z dx dy dz")
+    x, y, z, u, v, w = z3.Ints("x y z u v w")
     s = z3.Solver()
-    for i, ((hx, hy, hz), (hdx, hdy, hdz)) in enumerate(hailstones):
+    for i, ((hx, hy, hz), (hu, hv, hw)) in enumerate(hailstones):
         # need each hailstone to be hit by the "lazer" (magical stone)
-        ti = z3.Int(f"t_{i}")
-        s.add(ti > 0)
-        s.add(x + dx * ti == hx + hdx * ti)
-        s.add(y + dy * ti == hy + hdy * ti)
-        s.add(z + dz * ti == hz + hdz * ti)
+        t_i = z3.Int(f"t_{i}")
+        s.add(t_i > 0)
+        s.add(x + u * t_i == hx + hu * t_i)
+        s.add(y + v * t_i == hy + hv * t_i)
+        s.add(z + w * t_i == hz + hw * t_i)
 
     if s.check() == z3.sat:
         m = s.model()
